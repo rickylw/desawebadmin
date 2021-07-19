@@ -1,0 +1,22 @@
+<x-dashboard>
+    @section('content')
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3>Edit Kategori {{$kategoriGaleri->nama}}</h3>
+        
+                    <form action="{{route('kategori.galeri.ubah', $kategoriGaleri->id)}}" method="POST">
+                        @csrf
+                        @method('POST')
+                        <div class="form-group">
+                            <label for="name">Nama Kategori</label>
+                            <input type="text" name="name" id="name" value="{{$kategoriGaleri->nama}}" class="form-control">
+                        </div>
+        
+                        <button class="btn btn-primary" type="submit">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endsection
+</x-dashboard>

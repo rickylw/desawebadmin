@@ -56,6 +56,22 @@
     </li>
 
     <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#kategori"
+            aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Kategori</span>
+        </a>
+        <div id="kategori" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{route('kategori.anggaran')}}">Anggaran Pendapatan</a>
+                <a class="collapse-item" href="{{route('kategori.belanja-desa')}}">Belanja Desa</a>
+                <a class="collapse-item" href="{{route('kategori.berita')}}">Berita</a>
+                <a class="collapse-item" href="{{route('kategori.galeri')}}">Galeri</a>
+            </div>
+        </div>
+    </li>
+
+    <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#potensi"
             aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-fw fa-cog"></i>
@@ -65,7 +81,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{route('potensi.kependudukan')}}">Kependudukan</a>
                 <a class="collapse-item" href="{{route('potensi.pendidikan')}}">Pendidikan</a>
-                <a class="collapse-item" href="cards.html">Anggaran</a>
+                <a class="collapse-item" href="{{route('potensi.anggaran')}}">Anggaran</a>
                 <a class="collapse-item" href="cards.html">Produk Unggulan</a>
             </div>
         </div>
