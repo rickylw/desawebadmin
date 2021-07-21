@@ -103,6 +103,7 @@ class PotensiController extends Controller
     }
 
     public function simpanAnggaran(){
+        $kategoriAnggaran = KategoriAnggaran::all();
         $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
         $inputs = request()->validate([
             'anggaranPendapatanJanuari' => 'required',
@@ -138,17 +139,16 @@ class PotensiController extends Controller
         $anggaranLama = Anggaran::where('tahun_anggaran', $inputs['tahunAnggaran'])->get();
 
         if(count($anggaranLama) > 0){
-            dd($inputs);
+            return redirect()->route('potensi.anggaran');
         }
         else{
-            // $anggaran = new Anggaran();
-            // $anggaran->anggaran_pendapatan = $inputs['anggaranPendapatan'];
-            // $anggaran->realisasi_pendapatan = $inputs['realisasiPendapatan'];
-            // $anggaran->realisasi_belanja = $inputs['realisasiBelanja'];
-            // $anggaran->tahun_anggaran = $inputs['tahunAnggaran'];
-            // $anggaran->save();
+            $anggaran = new Anggaran();
+            $anggaran->anggaran_pendapatan = $inputs['anggaranPendapatan'];
+            $anggaran->realisasi_pendapatan = $inputs['realisasiPendapatan'];
+            $anggaran->realisasi_belanja = $inputs['realisasiBelanja'];
+            $anggaran->tahun_anggaran = $inputs['tahunAnggaran'];
+            $anggaran->save();
 
-            // dd($inputs['kategoriJanuari']['0']);
             $tes = array();
             for($l = 0; $l < count($bulan); $l++){
                 $tmp = array();
@@ -162,18 +162,15 @@ class PotensiController extends Controller
                 }
 
                 foreach($tmp as $key => $val){
-                    $anggaranJanuari = new DetailAnggaran();
-                    $anggaranJanuari->id_kategori_pendapatan = $key;
-                    $anggaranJanuari->tahun_anggaran = $inputs['tahunAnggaran'];
-                    $anggaranJanuari->bulan = $l;
-                    $anggaranJanuari->jumlah = $val;
-                    array_push($tes, $anggaranJanuari);
+                    $anggaran = new DetailAnggaran();
+                    $anggaran->id_kategori_anggaran = $key;
+                    $anggaran->tahun_anggaran = $inputs['tahunAnggaran'];
+                    $anggaran->bulan = $l+1;
+                    $anggaran->jumlah = $val;
+                    $anggaran->save();
                 }
             }
-            dd($tes);
-
-
+            return redirect()->route('potensi.anggaran');
         }
-
     }
 }
