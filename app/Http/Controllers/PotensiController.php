@@ -7,6 +7,8 @@ use App\Models\Kependudukan;
 use App\Models\Pendidikan;
 use App\Models\KategoriAnggaran;
 use App\Models\KategoriBelanjaDesa;
+use App\Models\Anggaran;
+use App\Models\DetailAnggaran;
 
 class PotensiController extends Controller
 {
@@ -95,14 +97,83 @@ class PotensiController extends Controller
     }
 
     public function tampilAnggaran(){
-        return view('potensi.anggaran');
+        $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
+        $kategoriAnggaran = KategoriAnggaran::all();
+        return view('potensi.anggaran', ["kategoriAnggaran" => $kategoriAnggaran, 'bulan' => $bulan]);
     }
 
     public function simpanAnggaran(){
+        $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
         $inputs = request()->validate([
-            'anggaranPendapatan' => 'required'
+            'anggaranPendapatanJanuari' => 'required',
+            'kategoriJanuari' => 'required',
+            'anggaranPendapatanFebruari' => 'required',
+            'kategoriFebruari' => 'required',
+            'anggaranPendapatanMaret' => 'required',
+            'kategoriMaret' => 'required',
+            'anggaranPendapatanApril' => 'required',
+            'kategoriApril' => 'required',
+            'anggaranPendapatanMei' => 'required',
+            'kategoriMei' => 'required',
+            'anggaranPendapatanJuni' => 'required',
+            'kategoriJuni' => 'required',
+            'anggaranPendapatanJuli' => 'required',
+            'kategoriJuli' => 'required',
+            'anggaranPendapatanAgustus' => 'required',
+            'kategoriAgustus' => 'required',
+            'anggaranPendapatanSeptember' => 'required',
+            'kategoriSeptember' => 'required',
+            'anggaranPendapatanOktober' => 'required',
+            'kategoriOktober' => 'required',
+            'anggaranPendapatanNovember' => 'required',
+            'kategoriNovember' => 'required',
+            'anggaranPendapatanDesember' => 'required',
+            'kategoriDesember' => 'required',
+            'anggaranPendapatan' => 'required',
+            'realisasiPendapatan' => 'required',
+            'realisasiBelanja' => 'required',
+            'tahunAnggaran' => 'required'
         ]);
 
-        dd($inputs);
+        $anggaranLama = Anggaran::where('tahun_anggaran', $inputs['tahunAnggaran'])->get();
+
+        if(count($anggaranLama) > 0){
+            dd($inputs);
+        }
+        else{
+            // $anggaran = new Anggaran();
+            // $anggaran->anggaran_pendapatan = $inputs['anggaranPendapatan'];
+            // $anggaran->realisasi_pendapatan = $inputs['realisasiPendapatan'];
+            // $anggaran->realisasi_belanja = $inputs['realisasiBelanja'];
+            // $anggaran->tahun_anggaran = $inputs['tahunAnggaran'];
+            // $anggaran->save();
+
+            // dd($inputs['kategoriJanuari']['0']);
+            $tes = array();
+            for($l = 0; $l < count($bulan); $l++){
+                $tmp = array();
+                for($i = 0; $i < count($inputs['kategori'.$bulan[$l]]); $i++){
+                    if(array_key_exists($inputs['kategori'.$bulan[$l]][$i], $tmp)){
+                        $tmp[$inputs['kategori'.$bulan[$l]][$i]] += (double) $inputs['anggaranPendapatan'.$bulan[$l]][$i];
+                    }
+                    else{
+                        $tmp[$inputs['kategori'.$bulan[$l]][$i]] = (double) $inputs['anggaranPendapatan'.$bulan[$l]][$i];
+                    }
+                }
+
+                foreach($tmp as $key => $val){
+                    $anggaranJanuari = new DetailAnggaran();
+                    $anggaranJanuari->id_kategori_pendapatan = $key;
+                    $anggaranJanuari->tahun_anggaran = $inputs['tahunAnggaran'];
+                    $anggaranJanuari->bulan = $l;
+                    $anggaranJanuari->jumlah = $val;
+                    array_push($tes, $anggaranJanuari);
+                }
+            }
+            dd($tes);
+
+
+        }
+
     }
 }
