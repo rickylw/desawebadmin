@@ -26,15 +26,16 @@
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                               <thead>
                                 <tr>
-                                    <th>Id</th>
+                                    <th>No</th>
                                     <th>Name</th>
                                     <th>Ubah</th>
                                 </tr>
                               </thead>
                               <tbody>
+                                <?php $k = 1 ?>
                                   @foreach($kategoriAnggaran as $kategori)
                                     <tr>
-                                        <td>{{$kategori->id}}</td>
+                                        <td>{{($kategoriAnggaran->currentPage()-1) * $kategoriAnggaran->perpage() + $k++}}</td>
                                         <td>{{$kategori->nama}}</td>
                                         <td>
                                             <form action="{{route('kategori.anggaran.detail', $kategori->id)}}" method="POST">
@@ -47,6 +48,17 @@
                                   @endforeach
                               </tbody>
                             </table>
+                            <div>
+                                <a href="{{$kategoriAnggaran->previousPageUrl()}}">
+                                    <i class="fas fa-fw fa-chevron-left"></i>
+                                </a>
+                                @for($i=1;$i<=$kategoriAnggaran->lastPage();$i++)
+                                    <a href="{{$kategoriAnggaran->url($i)}}">{{$i}}</a>
+                                @endfor
+                                <a href="{{$kategoriAnggaran->nextPageUrl()}}">
+                                    <i class="fas fa-fw fa-chevron-right"></i>
+                                </a>
+                            </div>
                           </div>
                         </div>
                     </div>

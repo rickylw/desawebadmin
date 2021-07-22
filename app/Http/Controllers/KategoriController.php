@@ -11,7 +11,7 @@ use App\Models\KategoriGaleri;
 class KategoriController extends Controller
 {
     public function tampilKategoriAnggaran(){
-        $kategoriAnggaran = KategoriAnggaran::all();
+        $kategoriAnggaran = KategoriAnggaran::paginate(6);
         return view('kategori.anggaran', ['kategoriAnggaran' => $kategoriAnggaran]);
     }
 
@@ -52,7 +52,7 @@ class KategoriController extends Controller
     }
     
     public function tampilKategoriBelanjaDesa(){
-        $kategoriBelanjaDesa = KategoriBelanjaDesa::all();
+        $kategoriBelanjaDesa = KategoriBelanjaDesa::paginate(6);
         return view('kategori.belanja-desa', ['kategoriBelanjaDesa' => $kategoriBelanjaDesa]);
     }
 
@@ -93,7 +93,7 @@ class KategoriController extends Controller
     }
     
     public function tampilKategoriBerita(){
-        $kategoriBerita = KategoriBerita::all();
+        $kategoriBerita = KategoriBerita::paginate(6);
         return view('kategori.berita', ['kategoriBerita' => $kategoriBerita]);
     }
 
@@ -134,7 +134,7 @@ class KategoriController extends Controller
     }
     
     public function tampilKategoriGaleri(){
-        $kategoriGaleri = KategoriGaleri::all();
+        $kategoriGaleri = KategoriGaleri::paginate(6);
         return view('kategori.galeri', ['kategoriGaleri' => $kategoriGaleri]);
     }
 

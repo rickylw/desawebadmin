@@ -82,7 +82,8 @@
                 <a class="collapse-item" href="{{route('potensi.kependudukan')}}">Kependudukan</a>
                 <a class="collapse-item" href="{{route('potensi.pendidikan')}}">Pendidikan</a>
                 <a class="collapse-item" href="{{route('potensi.anggaran')}}">Anggaran</a>
-                <a class="collapse-item" href="cards.html">Produk Unggulan</a>
+                <a class="collapse-item" href="{{route('potensi.belanja-desa')}}">Belanja Desa</a>
+                <a class="collapse-item" href="{{route('potensi.produk-unggulan')}}">Produk Unggulan</a>
             </div>
         </div>
     </li>

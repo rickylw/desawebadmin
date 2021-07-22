@@ -50,5 +50,19 @@ Route::get('/kependudukan', [App\Http\Controllers\PotensiController::class, 'tam
 Route::post('/kependudukan/simpan', [App\Http\Controllers\PotensiController::class, 'simpanKependudukan'])->name('potensi.kependudukan.simpan');
 Route::get('/pendidikan', [App\Http\Controllers\PotensiController::class, 'tampilPendidikan'])->name('potensi.pendidikan');
 Route::post('/pendidikan/simpan', [App\Http\Controllers\PotensiController::class, 'simpanPendidikan'])->name('potensi.pendidikan.simpan');
+
 Route::get('/anggaran', [App\Http\Controllers\PotensiController::class, 'tampilAnggaran'])->name('potensi.anggaran');
+Route::get('/anggaran/detail-anggaran/{anggaran}/ubah', [App\Http\Controllers\PotensiController::class, 'ubahAnggaran'])->name('potensi.anggaran.ubah');
+Route::post('/anggaran/update', [App\Http\Controllers\PotensiController::class, 'updateAnggaran'])->name('potensi.anggaran.update');
+Route::get('/anggaran/daftar-anggaran', [App\Http\Controllers\PotensiController::class, 'tampilDaftarAnggaran'])->name('potensi.anggaran.daftar-anggaran');
+Route::get('/anggaran/detail-anggaran/{anggaran}', [App\Http\Controllers\PotensiController::class, 'tampilDetailAnggaran'])->name('potensi.anggaran.detail-anggaran');
 Route::post('/anggaran/simpan', [App\Http\Controllers\PotensiController::class, 'simpanAnggaran'])->name('potensi.anggaran.simpan');
+
+Route::get('/belanja-desa', [App\Http\Controllers\PotensiController::class, 'tampilBelanjaDesa'])->name('potensi.belanja-desa');
+Route::post('/belanja-desa/simpan', [App\Http\Controllers\PotensiController::class, 'simpanBelanjaDesa'])->name('potensi.belanja-desa.simpan');
+Route::get('/belanja-desa/daftar-belanja-desa', [App\Http\Controllers\PotensiController::class, 'tampilDaftarBelanjaDesa'])->name('potensi.belanja-desa.daftar-belanja-desa');
+Route::get('/belanja-desa/detail-belanja-desa/{belanjadesa}', [App\Http\Controllers\PotensiController::class, 'tampilDetailBelanjaDesa'])->name('potensi.belanja-desa.detail-belanja-desa');
+Route::get('/belanja-desa/detail-belanja-desa/{belanjadesa}/ubah', [App\Http\Controllers\PotensiController::class, 'ubahBelanjaDesa'])->name('potensi.belanja-desa.ubah');
+Route::post('/belanja-desa/update', [App\Http\Controllers\PotensiController::class, 'updateBelanjaDesa'])->name('potensi.belanja-desa.update');
+
+Route::get('/produk-unggulan', [App\Http\Controllers\PotensiController::class, 'tampilProdukUnggulan'])->name('potensi.produk-unggulan');

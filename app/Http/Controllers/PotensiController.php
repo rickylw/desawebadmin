@@ -9,6 +9,8 @@ use App\Models\KategoriAnggaran;
 use App\Models\KategoriBelanjaDesa;
 use App\Models\Anggaran;
 use App\Models\DetailAnggaran;
+use App\Models\DetailBelanjaDesa;
+use Illuminate\Support\Facades\DB;
 
 class PotensiController extends Controller
 {
@@ -102,6 +104,31 @@ class PotensiController extends Controller
         return view('potensi.anggaran', ["kategoriAnggaran" => $kategoriAnggaran, 'bulan' => $bulan]);
     }
 
+    public function tampilDaftarAnggaran(){
+        $anggaran = Anggaran::paginate(10);        
+        return view('potensi.daftar-anggaran', ['anggaran' => $anggaran]);
+    }
+
+    public function ubahAnggaran($tahun){
+        $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
+        $kategoriAnggaran = KategoriAnggaran::all();
+        $detailAnggaran = $detailAnggaran = DetailAnggaran::where('tahun_anggaran', $tahun)->get(); 
+        $anggaran = Anggaran::where('tahun_anggaran', $tahun)->get();
+        return view('potensi.ubah-anggaran', ['detailAnggaran' => $detailAnggaran, 'bulan' => $bulan, 'kategoriAnggaran' => $kategoriAnggaran, 'anggaran' => $anggaran]);
+    }
+
+    public function tampilDetailAnggaran($tahun){
+        $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
+        $detailAnggaran = DetailAnggaran::where('tahun_anggaran', $tahun)->paginate(10);   
+        $kategoriAnggaran = KategoriAnggaran::all();
+        $kategori = [];
+        foreach($kategoriAnggaran as $key=>$value){
+            $kategori[$key] = $value->nama;
+        }     
+
+        return view('potensi.detail-anggaran', ['detailAnggaran' => $detailAnggaran, 'kategoriAnggaran' => $kategori, 'bulan' => $bulan]);
+    }
+
     public function simpanAnggaran(){
         $kategoriAnggaran = KategoriAnggaran::all();
         $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
@@ -172,5 +199,232 @@ class PotensiController extends Controller
             }
             return redirect()->route('potensi.anggaran');
         }
+    }
+
+    public function updateAnggaran(){
+        $kategoriAnggaran = KategoriAnggaran::all();
+        $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
+        $inputs = request()->validate([
+            'anggaranPendapatanJanuari' => 'required',
+            'kategoriJanuari' => 'required',
+            'anggaranPendapatanFebruari' => 'required',
+            'kategoriFebruari' => 'required',
+            'anggaranPendapatanMaret' => 'required',
+            'kategoriMaret' => 'required',
+            'anggaranPendapatanApril' => 'required',
+            'kategoriApril' => 'required',
+            'anggaranPendapatanMei' => 'required',
+            'kategoriMei' => 'required',
+            'anggaranPendapatanJuni' => 'required',
+            'kategoriJuni' => 'required',
+            'anggaranPendapatanJuli' => 'required',
+            'kategoriJuli' => 'required',
+            'anggaranPendapatanAgustus' => 'required',
+            'kategoriAgustus' => 'required',
+            'anggaranPendapatanSeptember' => 'required',
+            'kategoriSeptember' => 'required',
+            'anggaranPendapatanOktober' => 'required',
+            'kategoriOktober' => 'required',
+            'anggaranPendapatanNovember' => 'required',
+            'kategoriNovember' => 'required',
+            'anggaranPendapatanDesember' => 'required',
+            'kategoriDesember' => 'required',
+            'anggaranPendapatan' => 'required',
+            'realisasiPendapatan' => 'required',
+            'realisasiBelanja' => 'required',
+            'tahunAnggaran' => 'required',
+            'tahunAnggaranLama' => 'required'
+        ]);
+
+        //Hapus Data Lama
+        Anggaran::where('tahun_anggaran', $inputs['tahunAnggaranLama'])->delete();
+        DetailAnggaran::where('tahun_anggaran', $inputs['tahunAnggaranLama'])->delete();
+
+        $anggaran = new Anggaran();
+        $anggaran->anggaran_pendapatan = $inputs['anggaranPendapatan'];
+        $anggaran->realisasi_pendapatan = $inputs['realisasiPendapatan'];
+        $anggaran->realisasi_belanja = $inputs['realisasiBelanja'];
+        $anggaran->tahun_anggaran = $inputs['tahunAnggaran'];
+        $anggaran->save();
+
+        $tes = array();
+        for($l = 0; $l < count($bulan); $l++){
+            $tmp = array();
+            for($i = 0; $i < count($inputs['kategori'.$bulan[$l]]); $i++){
+                if(array_key_exists($inputs['kategori'.$bulan[$l]][$i], $tmp)){
+                    $tmp[$inputs['kategori'.$bulan[$l]][$i]] += (double) $inputs['anggaranPendapatan'.$bulan[$l]][$i];
+                }
+                else{
+                    $tmp[$inputs['kategori'.$bulan[$l]][$i]] = (double) $inputs['anggaranPendapatan'.$bulan[$l]][$i];
+                }
+            }
+
+            foreach($tmp as $key => $val){
+                $anggaran = new DetailAnggaran();
+                $anggaran->id_kategori_anggaran = $key;
+                $anggaran->tahun_anggaran = $inputs['tahunAnggaran'];
+                $anggaran->bulan = $l+1;
+                $anggaran->jumlah = $val;
+                $anggaran->save();
+            }
+        }
+        return redirect()->route('potensi.anggaran.daftar-anggaran');
+        
+    }
+
+    public function tampilBelanjaDesa(){
+        $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
+        $kategoriBelanjaDesa = KategoriBelanjaDesa::all();
+        return view('potensi.belanja-desa', ["kategoriBelanjaDesa" => $kategoriBelanjaDesa, 'bulan' => $bulan]);
+    }
+
+    public function simpanBelanjaDesa(){
+        $kategoriBelanjaDesa = KategoriBelanjaDesa::all();
+        $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
+        $inputs = request()->validate([
+            'belanjaDesaJanuari' => 'required',
+            'kategoriJanuari' => 'required',
+            'belanjaDesaFebruari' => 'required',
+            'kategoriFebruari' => 'required',
+            'belanjaDesaMaret' => 'required',
+            'kategoriMaret' => 'required',
+            'belanjaDesaApril' => 'required',
+            'kategoriApril' => 'required',
+            'belanjaDesaMei' => 'required',
+            'kategoriMei' => 'required',
+            'belanjaDesaJuni' => 'required',
+            'kategoriJuni' => 'required',
+            'belanjaDesaJuli' => 'required',
+            'kategoriJuli' => 'required',
+            'belanjaDesaAgustus' => 'required',
+            'kategoriAgustus' => 'required',
+            'belanjaDesaSeptember' => 'required',
+            'kategoriSeptember' => 'required',
+            'belanjaDesaOktober' => 'required',
+            'kategoriOktober' => 'required',
+            'belanjaDesaNovember' => 'required',
+            'kategoriNovember' => 'required',
+            'belanjaDesaDesember' => 'required',
+            'kategoriDesember' => 'required',
+            'tahunAnggaran' => 'required'
+        ]);
+
+        $detailBelanjaDesaLama = DetailBelanjaDesa::where('tahun_anggaran', $inputs['tahunAnggaran'])->get();
+
+        if(count($detailBelanjaDesaLama) > 0){
+            return redirect()->route('potensi.belanja-desa');
+        }
+        else{
+            $tes = array();
+            for($l = 0; $l < count($bulan); $l++){
+                $tmp = array();
+                for($i = 0; $i < count($inputs['kategori'.$bulan[$l]]); $i++){
+                    if(array_key_exists($inputs['kategori'.$bulan[$l]][$i], $tmp)){
+                        $tmp[$inputs['kategori'.$bulan[$l]][$i]] += (double) $inputs['belanjaDesa'.$bulan[$l]][$i];
+                    }
+                    else{
+                        $tmp[$inputs['kategori'.$bulan[$l]][$i]] = (double) $inputs['belanjaDesa'.$bulan[$l]][$i];
+                    }
+                }
+
+                foreach($tmp as $key => $val){
+                    $belanjaDesa = new DetailBelanjaDesa();
+                    $belanjaDesa->id_kategori_belanja_desa = $key;
+                    $belanjaDesa->tahun_anggaran = $inputs['tahunAnggaran'];
+                    $belanjaDesa->bulan = $l+1;
+                    $belanjaDesa->jumlah = $val;
+                    $belanjaDesa->save();
+                }
+            }
+            return redirect()->route('potensi.belanja-desa');
+        }
+    }
+
+    public function tampilDaftarBelanjaDesa(){
+        $detailBelanjaDesa = DB::table('tbl_detail_belanja_desa')->select(DB::raw('*, sum(jumlah) as total'))->groupBy('tahun_anggaran')->paginate(10);
+        return view('potensi.daftar-belanja-desa', ['detailBelanjaDesa' => $detailBelanjaDesa]);
+    }
+
+    public function tampilDetailBelanjaDesa($tahun){
+        $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
+        $detailBelanjaDesa = DetailBelanjaDesa::where('tahun_anggaran', $tahun)->paginate(10);   
+        $kategoriBelanjaDesa = KategoriBelanjaDesa::all();
+        $kategori = [];
+        foreach($kategoriBelanjaDesa as $key=>$value){
+            $kategori[$key] = $value->nama;
+        }     
+
+        return view('potensi.detail-belanja-desa', ['detailBelanjaDesa' => $detailBelanjaDesa, 'kategoriBelanjaDesa' => $kategori, 'bulan' => $bulan]);
+    }
+
+    public function ubahBelanjaDesa($tahun){
+        $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
+        $kategoriBelanjaDesa = KategoriBelanjaDesa::all();
+        $detailBelanjaDesa = DetailBelanjaDesa::where('tahun_anggaran', $tahun)->get(); 
+        return view('potensi.ubah-belanja-desa', ['detailBelanjaDesa' => $detailBelanjaDesa, 'bulan' => $bulan, 'kategoriBelanjaDesa' => $kategoriBelanjaDesa]);
+    }
+
+    public function updateBelanjaDesa(){
+        $kategoriBelanjaDesa = KategoriBelanjaDesa::all();
+        $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
+        $inputs = request()->validate([
+            'belanjaDesaJanuari' => 'required',
+            'kategoriJanuari' => 'required',
+            'belanjaDesaFebruari' => 'required',
+            'kategoriFebruari' => 'required',
+            'belanjaDesaMaret' => 'required',
+            'kategoriMaret' => 'required',
+            'belanjaDesaApril' => 'required',
+            'kategoriApril' => 'required',
+            'belanjaDesaMei' => 'required',
+            'kategoriMei' => 'required',
+            'belanjaDesaJuni' => 'required',
+            'kategoriJuni' => 'required',
+            'belanjaDesaJuli' => 'required',
+            'kategoriJuli' => 'required',
+            'belanjaDesaAgustus' => 'required',
+            'kategoriAgustus' => 'required',
+            'belanjaDesaSeptember' => 'required',
+            'kategoriSeptember' => 'required',
+            'belanjaDesaOktober' => 'required',
+            'kategoriOktober' => 'required',
+            'belanjaDesaNovember' => 'required',
+            'kategoriNovember' => 'required',
+            'belanjaDesaDesember' => 'required',
+            'kategoriDesember' => 'required',
+            'tahunAnggaran' => 'required',
+            'tahunAnggaranLama' => 'required'
+        ]);
+
+        //Hapus Data Lama
+        DetailBelanjaDesa::where('tahun_anggaran', $inputs['tahunAnggaranLama'])->delete();
+
+        $tes = array();
+        for($l = 0; $l < count($bulan); $l++){
+            $tmp = array();
+            for($i = 0; $i < count($inputs['kategori'.$bulan[$l]]); $i++){
+                if(array_key_exists($inputs['kategori'.$bulan[$l]][$i], $tmp)){
+                    $tmp[$inputs['kategori'.$bulan[$l]][$i]] += (double) $inputs['belanjaDesa'.$bulan[$l]][$i];
+                }
+                else{
+                    $tmp[$inputs['kategori'.$bulan[$l]][$i]] = (double) $inputs['belanjaDesa'.$bulan[$l]][$i];
+                }
+            }
+
+            foreach($tmp as $key => $val){
+                $belanjaDesa = new DetailBelanjaDesa();
+                $belanjaDesa->id_kategori_belanja_desa = $key;
+                $belanjaDesa->tahun_anggaran = $inputs['tahunAnggaran'];
+                $belanjaDesa->bulan = $l+1;
+                $belanjaDesa->jumlah = $val;
+                $belanjaDesa->save();
+            }
+        }
+        return redirect()->route('potensi.belanja-desa.daftar-belanja-desa');
+        
+    }
+
+    public function tampilProdukUnggulan(){
+        return view('potensi.produk-unggulan');
     }
 }
