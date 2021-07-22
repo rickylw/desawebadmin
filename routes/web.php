@@ -66,3 +66,8 @@ Route::get('/belanja-desa/detail-belanja-desa/{belanjadesa}/ubah', [App\Http\Con
 Route::post('/belanja-desa/update', [App\Http\Controllers\PotensiController::class, 'updateBelanjaDesa'])->name('potensi.belanja-desa.update');
 
 Route::get('/produk-unggulan', [App\Http\Controllers\PotensiController::class, 'tampilProdukUnggulan'])->name('potensi.produk-unggulan');
+Route::get('/produk-unggulan/tambah', [App\Http\Controllers\PotensiController::class, 'tambahProdukUnggulan'])->name('potensi.produk-unggulan.tambah');
+Route::post('/produk-unggulan/simpan', [App\Http\Controllers\PotensiController::class, 'simpanProdukUnggulan'])->name('potensi.produk-unggulan.simpan');
+Route::post('/produk-unggulan/detail/{id}', [App\Http\Controllers\PotensiController::class, 'detailProdukUnggulan'])->name('potensi.produk-unggulan.detail');
+Route::post('/produk-unggulan/hapus/{id}', [App\Http\Controllers\PotensiController::class, 'hapusProdukUnggulan'])->name('potensi.produk-unggulan.hapus');
+Route::post('/produk-unggulan/update/{id}', [App\Http\Controllers\PotensiController::class, 'updateProdukUnggulan'])->name('potensi.produk-unggulan.update');

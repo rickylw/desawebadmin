@@ -10,6 +10,7 @@ use App\Models\KategoriBelanjaDesa;
 use App\Models\Anggaran;
 use App\Models\DetailAnggaran;
 use App\Models\DetailBelanjaDesa;
+use App\Models\ProdukUnggulan;
 use Illuminate\Support\Facades\DB;
 
 class PotensiController extends Controller
@@ -425,6 +426,68 @@ class PotensiController extends Controller
     }
 
     public function tampilProdukUnggulan(){
-        return view('potensi.produk-unggulan');
+        $produkUnggulan = ProdukUnggulan::paginate(6);
+        return view('potensi.produk-unggulan', ['produkUnggulan' => $produkUnggulan]);
+    }
+
+    public function tambahProdukUnggulan(){
+        return view('potensi.tambah-produk-unggulan');
+    }
+
+    public function hapusProdukUnggulan($id){
+        ProdukUnggulan::where('id', $id)->delete();
+        return redirect()->route('potensi.produk-unggulan');
+    }
+
+    public function detailProdukUnggulan($id){
+        $produkUnggulan = ProdukUnggulan::where('id', $id)->first();
+        return view('potensi.detail-produk-unggulan', ['produkUnggulan' => $produkUnggulan]);
+    }
+
+    public function simpanProdukUnggulan(){
+        $inputs = request()->validate([
+            'nama' => 'required',
+            'fotoProduk' => 'required',
+        ]);
+
+        $produkUnggulan = new ProdukUnggulan();
+        $produkUnggulan->nama = $inputs['nama'];
+        $produkUnggulan->deskripsi = request('editor');
+
+        if(request('fotoProduk')){
+            $namefile = 'produk_unggulan_'. date("Y_m_d_H_i_s") .'.'.request('fotoProduk')->extension();
+            $inputs['fotoProduk'] = 'storage/produk_unggulan/'.$namefile;
+            request('fotoProduk')->storeAs('produk_unggulan', $namefile, 'public');
+            $produkUnggulan->foto = $inputs['fotoProduk'];
+        }
+
+        $produkUnggulan->save();
+        return redirect()->route('potensi.produk-unggulan');
+    }
+
+    public function updateProdukUnggulan($id){
+        $inputs = request()->validate([
+            'nama' => 'required',
+            'fotoProduk' => 'required',
+        ]);
+
+
+        $produkUnggulan = ProdukUnggulan::where('id', $id)->first();
+
+        // \Storage::disk('public')->delete('public/produk_unggulan/produk_unggulan_2021_07_22_13_19_53.jpg');
+
+        $produkUnggulan->nama = $inputs['nama'];
+        $produkUnggulan->deskripsi = request('editor');
+
+        if(request('fotoProduk')){
+            $namefile = 'produk_unggulan_'. date("Y_m_d_H_i_s") .'.'.request('fotoProduk')->extension();
+            $inputs['fotoProduk'] = 'storage/produk_unggulan/'.$namefile;
+            request('fotoProduk')->storeAs('produk_unggulan', $namefile, 'public');
+            $produkUnggulan->foto = $inputs['fotoProduk'];
+        }
+        
+
+        $produkUnggulan->save();
+        // return redirect()->route('potensi.produk-unggulan');
     }
 }
