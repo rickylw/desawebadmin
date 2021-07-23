@@ -18,11 +18,11 @@
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                       <thead>
                         <tr>
-                            <th>No</th>
-                            <th>Nama</th>
-                            <th>Foto</th>
-                            <th>Deskripsi</th>
-                            <th>Aksi</th>
+                            <th style="width:5%">No</th>
+                            <th style="width:15%">Nama</th>
+                            <th style="width:30%">Foto</th>
+                            <th style="width:40%">Deskripsi</th>
+                            <th style="width:10%">Aksi</th>
                         </tr>
                       </thead>
                       <tbody>

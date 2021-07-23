@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class PotensiController extends Controller
 {
+
     public function tampilKependudukan(){
         $kependudukan = Kependudukan::all()->first();
         return view('potensi.kependudukan', ['kependudukan' => $kependudukan]);
@@ -467,27 +468,25 @@ class PotensiController extends Controller
 
     public function updateProdukUnggulan($id){
         $inputs = request()->validate([
-            'nama' => 'required',
-            'fotoProduk' => 'required',
+            'nama' => 'required'
         ]);
 
-
         $produkUnggulan = ProdukUnggulan::where('id', $id)->first();
-
-        // \Storage::disk('public')->delete('public/produk_unggulan/produk_unggulan_2021_07_22_13_19_53.jpg');
 
         $produkUnggulan->nama = $inputs['nama'];
         $produkUnggulan->deskripsi = request('editor');
 
         if(request('fotoProduk')){
+            $filenameLama = explode("/", $produkUnggulan->foto);
+            \Storage::disk('public')->delete('produk_unggulan/'.$filenameLama[count($filenameLama)-1]);
+
             $namefile = 'produk_unggulan_'. date("Y_m_d_H_i_s") .'.'.request('fotoProduk')->extension();
             $inputs['fotoProduk'] = 'storage/produk_unggulan/'.$namefile;
             request('fotoProduk')->storeAs('produk_unggulan', $namefile, 'public');
             $produkUnggulan->foto = $inputs['fotoProduk'];
-        }
-        
+        }        
 
         $produkUnggulan->save();
-        // return redirect()->route('potensi.produk-unggulan');
+        return redirect()->route('potensi.produk-unggulan');
     }
 }

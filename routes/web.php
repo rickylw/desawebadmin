@@ -17,6 +17,8 @@ Route::get('/', function () {
     return view('dashboard.index');
 });
 
+Route::get('/login', [App\Http\Controllers\AuthController::class, 'tampilLogin'])->name('login.index');
+
 Route::get('/profil/sejarah', [App\Http\Controllers\ProfilController::class, 'tampilSejarah'])->name('profil.sejarah');
 Route::post('/profil/sejarah/simpan', [App\Http\Controllers\ProfilController::class, 'simpanSejarah'])->name('profil.sejarah.simpan');
 Route::get('/profil/wilayah-geografis', [App\Http\Controllers\ProfilController::class, 'tampilWilayahGeografis'])->name('profil.wilayah-geografis');
@@ -71,3 +73,24 @@ Route::post('/produk-unggulan/simpan', [App\Http\Controllers\PotensiController::
 Route::post('/produk-unggulan/detail/{id}', [App\Http\Controllers\PotensiController::class, 'detailProdukUnggulan'])->name('potensi.produk-unggulan.detail');
 Route::post('/produk-unggulan/hapus/{id}', [App\Http\Controllers\PotensiController::class, 'hapusProdukUnggulan'])->name('potensi.produk-unggulan.hapus');
 Route::post('/produk-unggulan/update/{id}', [App\Http\Controllers\PotensiController::class, 'updateProdukUnggulan'])->name('potensi.produk-unggulan.update');
+
+Route::get('/berita', [App\Http\Controllers\BeritaController::class, 'tampilBerita'])->name('berita.index');
+Route::get('/berita/tambah', [App\Http\Controllers\BeritaController::class, 'tampilTambahBerita'])->name('berita.tambah');
+Route::post('/berita/simpan', [App\Http\Controllers\BeritaController::class, 'simpanBerita'])->name('berita.simpan');
+Route::get('/berita/daftar-berita/{id}', [App\Http\Controllers\BeritaController::class, 'tampilDaftarBerita'])->name('berita.daftar-berita');
+Route::get('/berita/detail-berita/{id}', [App\Http\Controllers\BeritaController::class, 'tampilDetailBerita'])->name('berita.detail-berita');
+Route::post('/berita/update/{id}', [App\Http\Controllers\BeritaController::class, 'updateBerita'])->name('berita.update');
+
+Route::get('/masyarakat', [App\Http\Controllers\PenggunaController::class, 'tampilMasyarakat'])->name('pengguna.masyarakat');
+Route::get('/masyarakat/tambah', [App\Http\Controllers\PenggunaController::class, 'tampilTambahMasyarakat'])->name('pengguna.masyarakat.tambah');
+Route::post('/masyarakat/simpan', [App\Http\Controllers\PenggunaController::class, 'simpanMasyarakat'])->name('pengguna.masyarakat.simpan');
+Route::get('/masyarakat/detail/{id}', [App\Http\Controllers\PenggunaController::class, 'tampilDetailMasyarakat'])->name('pengguna.masyarakat.detail');
+Route::post('/masyarakat/update/{id}', [App\Http\Controllers\PenggunaController::class, 'updateMasyarakat'])->name('pengguna.masyarakat.update');
+Route::post('/masyarakat/hapus/{id}', [App\Http\Controllers\PenggunaController::class, 'hapusMasyarakat'])->name('pengguna.masyarakat.hapus');
+
+Route::get('/admin', [App\Http\Controllers\PenggunaController::class, 'tampilAdmin'])->name('pengguna.admin');
+Route::get('/admin/tambah', [App\Http\Controllers\PenggunaController::class, 'tampilTambahAdmin'])->name('pengguna.admin.tambah');
+Route::post('/admin/simpan', [App\Http\Controllers\PenggunaController::class, 'simpanAdmin'])->name('pengguna.admin.simpan');
+Route::get('/admin/detail/{id}', [App\Http\Controllers\PenggunaController::class, 'tampilDetailAdmin'])->name('pengguna.admin.detail');
+Route::post('/admin/update/{id}', [App\Http\Controllers\PenggunaController::class, 'updateAdmin'])->name('pengguna.admin.update');
+Route::post('/admin/hapus/{id}', [App\Http\Controllers\PenggunaController::class, 'hapusAdmin'])->name('pengguna.admin.hapus');
