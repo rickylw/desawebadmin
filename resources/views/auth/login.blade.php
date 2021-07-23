@@ -17,24 +17,22 @@
 			<div class="col-md-8 col-xs-12 col-sm-12 login_form ">
 				<div class="container-fluid">
 					<div class="row text-center">
-						<h2>Login</h2>
+						<h2 class="mb-3 mt-2">Login</h2>
 					</div>
 					<div class="row">
-						<form control="" class="form-group">
+						<form class="form-group" action="{{route('login')}}" method="POST">
+							@csrf
+							@method('POST')
 							<div class="row">
 								<input type="text" name="username" id="username" class="form__input" placeholder="Username">
 							</div>
 							<div class="row">
-								<!-- <span class="fa fa-lock"></span> -->
 								<input type="password" name="password" id="password" class="form__input" placeholder="Password">
 							</div>
 							<div class="row">
-								<input type="submit" value="Submit" class="btn">
+								<button class="btn btn-primary" type="submit">Login</button>
 							</div>
 						</form>
-					</div>
-					<div class="row">
-						<p>Don't have an account? <a href="#">Register Here</a></p>
 					</div>
 				</div>
 			</div>
