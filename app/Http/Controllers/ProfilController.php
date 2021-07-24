@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Profil;
+use App\Models\Website;
 
 class ProfilController extends Controller
 {
@@ -45,5 +46,51 @@ class ProfilController extends Controller
         $profil->geografis = request('editor');
         $profil->save();
         return redirect()->route('profil.wilayah-geografis');
+    }
+
+    public function tampilWebsite(){
+        $website = Website::all()->first();
+        return view('profil.website', ['website' => $website]);
+    }
+
+    public function simpanWebsite(){
+        $website = Website::all()->first();
+
+        $inputs = request()->validate([
+            'title' => 'required',
+            'facebook' => 'required',
+            'instagram' => 'required',
+            'youtube' => 'required',
+            'twitter' => 'required',
+        ]);
+
+        $website = new Website();
+        $website->title = $inputs['title'];
+        $website->description = request('editor');
+        $website->facebook = $inputs['facebook'];
+        $website->instagram = $inputs['instagram'];
+        $website->youtube = $inputs['youtube'];
+        $website->twitter = $inputs['twitter'];
+
+        if($website->description == null){
+            return redirect()->route('profil.website');
+        }
+
+        if(request('logo_desa')){
+            $namefile = 'logo-desa.'.request('logo_desa')->extension();
+            $inputs['logo_desa'] = 'storage/profil/'.$namefile;
+            request('logo_desa')->storeAs('profil', $namefile, 'public');
+            $website->logo_desa = $inputs['logo_desa'];
+        }
+
+        if(request('logo_kecil')){
+            $namefile = 'logo-kecil.'.request('logo_kecil')->extension();
+            $inputs['logo_kecil'] = 'storage/profil/'.$namefile;
+            request('logo_kecil')->storeAs('profil', $namefile, 'public');
+            $website->logo_kecil = $inputs['logo_kecil'];
+        }
+
+        $website->save();
+        return redirect()->route('profil.website');
     }
 }

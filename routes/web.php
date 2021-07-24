@@ -26,6 +26,9 @@ Route::middleware(['Login'])->group(function(){
     Route::post('/profil/sejarah/simpan', [App\Http\Controllers\ProfilController::class, 'simpanSejarah'])->name('profil.sejarah.simpan');
     Route::get('/profil/wilayah-geografis', [App\Http\Controllers\ProfilController::class, 'tampilWilayahGeografis'])->name('profil.wilayah-geografis');
     Route::post('/profil/wilayah-geografis/simpan', [App\Http\Controllers\ProfilController::class, 'simpanWilayahGeografis'])->name('profil.wilayah-geografis.simpan');
+    Route::get('/profil/website', [App\Http\Controllers\ProfilController::class, 'tampilWebsite'])->name('profil.website');
+    Route::post('/profil/website/simpan', [App\Http\Controllers\ProfilController::class, 'simpanWebsite'])->name('profil.website.simpan');
+
     Route::get('/organisasi/struktur-organisasi', [App\Http\Controllers\OrganisasiController::class, 'tampilStrukturOrganisasi'])->name('organisasi.struktur-organisasi');
     Route::post('/organisasi/struktur-organisasi/simpan', [App\Http\Controllers\OrganisasiController::class, 'simpanStrukturOrganisasi'])->name('organisasi.struktur-organisasi.simpan');
     Route::get('/organisasi/visi-misi', [App\Http\Controllers\OrganisasiController::class, 'tampilVisiMisi'])->name('organisasi.visi-misi');

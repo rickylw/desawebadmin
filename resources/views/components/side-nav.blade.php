@@ -37,6 +37,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{route('profil.sejarah')}}">Sejarah</a>
                 <a class="collapse-item" href="{{route('profil.wilayah-geografis')}}">Wilayah Geografis</a>
+                <a class="collapse-item" href="{{route('profil.website')}}">Website</a>
             </div>
         </div>
     </li>
