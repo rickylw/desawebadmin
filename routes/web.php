@@ -20,7 +20,7 @@ Route::post('/proses-login', [App\Http\Controllers\AuthController::class, 'prose
 Route::middleware(['Login'])->group(function(){
     
     Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
-    Route::get('/dashboard', [App\Http\Controllers\AuthController::class, 'tampilDashboard'])->name('dashboard');
+    Route::get('/', [App\Http\Controllers\AuthController::class, 'tampilDashboard'])->name('dashboard');
 
     Route::get('/profil/sejarah', [App\Http\Controllers\ProfilController::class, 'tampilSejarah'])->name('profil.sejarah');
     Route::post('/profil/sejarah/simpan', [App\Http\Controllers\ProfilController::class, 'simpanSejarah'])->name('profil.sejarah.simpan');
