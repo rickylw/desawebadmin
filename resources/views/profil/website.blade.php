@@ -52,7 +52,7 @@
 
             <div class="form-group">
                 <label for="name">Facebook</label>
-                <input type="text" name="facebook" id="facebook" value="<?php echo ($website != null) ? $website->title : '' ?>" class="form-control">
+                <input type="text" name="facebook" id="facebook" value="<?php echo ($website != null) ? $website->facebook : '' ?>" class="form-control">
             </div>
 
             <div class="form-group">

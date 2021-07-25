@@ -20,6 +20,7 @@ class KategoriController extends Controller
             'name' => 'required'
         ]);
 
+        //Batal jika kategori sudah ada
         if(KategoriAnggaran::where('nama', $inputs['name'])->first()){
             return redirect()->route('kategori.anggaran');
         }
@@ -42,6 +43,7 @@ class KategoriController extends Controller
             'name' => 'required'
         ]);
 
+        //Batal jika kategori sudah ada
         if(KategoriAnggaran::where('nama', $inputs['name'])->first()){
             return redirect()->route('kategori.anggaran');
         }
@@ -61,6 +63,7 @@ class KategoriController extends Controller
             'name' => 'required'
         ]);
 
+        //Batal jika kategori sudah ada
         if(KategoriBelanjaDesa::where('nama', $inputs['name'])->first()){
             return redirect()->route('kategori.belanja-desa');
         }
@@ -83,6 +86,7 @@ class KategoriController extends Controller
             'name' => 'required'
         ]);
 
+        //Batal jika kategori sudah ada
         if(KategoriBelanjaDesa::where('nama', $inputs['name'])->first()){
             return redirect()->route('kategori.belanja-desa');
         }
@@ -102,6 +106,7 @@ class KategoriController extends Controller
             'name' => 'required'
         ]);
 
+        //Batal jika kategori sudah ada
         if(KategoriBerita::where('nama', $inputs['name'])->first()){
             return redirect()->route('kategori.berita');
         }
@@ -124,6 +129,7 @@ class KategoriController extends Controller
             'name' => 'required'
         ]);
 
+        //Batal jika kategori sudah ada
         if(KategoriBerita::where('nama', $inputs['name'])->first()){
             return redirect()->route('kategori.berita');
         }
@@ -143,6 +149,7 @@ class KategoriController extends Controller
             'name' => 'required'
         ]);
 
+        //Batal jika kategori sudah ada
         if(KategoriGaleri::where('nama', $inputs['name'])->first()){
             return redirect()->route('kategori.galeri');
         }
@@ -165,6 +172,7 @@ class KategoriController extends Controller
             'name' => 'required'
         ]);
 
+        //Batal jika kategori sudah ada
         if(KategoriGaleri::where('nama', $inputs['name'])->first()){
             return redirect()->route('kategori.galeri');
         }

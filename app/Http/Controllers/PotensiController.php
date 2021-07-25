@@ -114,6 +114,7 @@ class PotensiController extends Controller
     public function ubahAnggaran($tahun){
         $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
         $kategoriAnggaran = KategoriAnggaran::all();
+        //Detail Anggarn berdasarkan tahun
         $detailAnggaran = $detailAnggaran = DetailAnggaran::where('tahun_anggaran', $tahun)->get(); 
         $anggaran = Anggaran::where('tahun_anggaran', $tahun)->get();
         return view('potensi.ubah-anggaran', ['detailAnggaran' => $detailAnggaran, 'bulan' => $bulan, 'kategoriAnggaran' => $kategoriAnggaran, 'anggaran' => $anggaran]);
@@ -123,6 +124,7 @@ class PotensiController extends Controller
         $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
         $detailAnggaran = DetailAnggaran::where('tahun_anggaran', $tahun)->paginate(10);   
         $kategoriAnggaran = KategoriAnggaran::all();
+        //Menyiapkan data kategori
         $kategori = [];
         foreach($kategoriAnggaran as $key=>$value){
             $kategori[$key] = $value->nama;
@@ -167,6 +169,7 @@ class PotensiController extends Controller
 
         $anggaranLama = Anggaran::where('tahun_anggaran', $inputs['tahunAnggaran'])->get();
 
+        //Batal jika ada data anggaran lama dengan tahun yg diinputkan sama
         if(count($anggaranLama) > 0){
             return redirect()->route('potensi.anggaran');
         }
@@ -179,9 +182,12 @@ class PotensiController extends Controller
             $anggaran->save();
 
             $tes = array();
+            //Menyiapkan data per bulan
             for($l = 0; $l < count($bulan); $l++){
                 $tmp = array();
+                //Menyiapkan data per kategori anggaran
                 for($i = 0; $i < count($inputs['kategori'.$bulan[$l]]); $i++){
+                    //Jika kategori telah ada di variabel tmp maka dijumlahkan kalau belum ditambahkan
                     if(array_key_exists($inputs['kategori'.$bulan[$l]][$i], $tmp)){
                         $tmp[$inputs['kategori'.$bulan[$l]][$i]] += (double) $inputs['anggaranPendapatan'.$bulan[$l]][$i];
                     }
@@ -189,7 +195,7 @@ class PotensiController extends Controller
                         $tmp[$inputs['kategori'.$bulan[$l]][$i]] = (double) $inputs['anggaranPendapatan'.$bulan[$l]][$i];
                     }
                 }
-
+                //menyimpan data pada bulan tertentu dengan berbagai kategori
                 foreach($tmp as $key => $val){
                     $anggaran = new DetailAnggaran();
                     $anggaran->id_kategori_anggaran = $key;
@@ -238,10 +244,11 @@ class PotensiController extends Controller
             'tahunAnggaranLama' => 'required'
         ]);
 
-        //Hapus Data Lama
+        //Hapus anggaran Lama
         Anggaran::where('tahun_anggaran', $inputs['tahunAnggaranLama'])->delete();
         DetailAnggaran::where('tahun_anggaran', $inputs['tahunAnggaranLama'])->delete();
 
+        //Menyimpan anggaran baru
         $anggaran = new Anggaran();
         $anggaran->anggaran_pendapatan = $inputs['anggaranPendapatan'];
         $anggaran->realisasi_pendapatan = $inputs['realisasiPendapatan'];
@@ -250,9 +257,12 @@ class PotensiController extends Controller
         $anggaran->save();
 
         $tes = array();
+        //Menyiapkan data per bulan
         for($l = 0; $l < count($bulan); $l++){
+            //Menyiapkan data per kategori anggaran
             $tmp = array();
             for($i = 0; $i < count($inputs['kategori'.$bulan[$l]]); $i++){
+                //Jika kategori telah ada di variabel tmp maka dijumlahkan kalau belum ditambahkan
                 if(array_key_exists($inputs['kategori'.$bulan[$l]][$i], $tmp)){
                     $tmp[$inputs['kategori'.$bulan[$l]][$i]] += (double) $inputs['anggaranPendapatan'.$bulan[$l]][$i];
                 }
@@ -261,6 +271,7 @@ class PotensiController extends Controller
                 }
             }
 
+            //menyimpan data pada bulan tertentu dengan berbagai kategori
             foreach($tmp as $key => $val){
                 $anggaran = new DetailAnggaran();
                 $anggaran->id_kategori_anggaran = $key;
@@ -313,14 +324,18 @@ class PotensiController extends Controller
 
         $detailBelanjaDesaLama = DetailBelanjaDesa::where('tahun_anggaran', $inputs['tahunAnggaran'])->get();
 
+        //Batal jika ada data anggaran lama dengan tahun yg diinputkan sama
         if(count($detailBelanjaDesaLama) > 0){
             return redirect()->route('potensi.belanja-desa');
         }
         else{
+            //Menyiapkan data per bulan
             $tes = array();
             for($l = 0; $l < count($bulan); $l++){
+                //Menyiapkan data per kategori belanja desa
                 $tmp = array();
                 for($i = 0; $i < count($inputs['kategori'.$bulan[$l]]); $i++){
+                    //Jika kategori telah ada di variabel tmp maka dijumlahkan kalau belum ditambahkan
                     if(array_key_exists($inputs['kategori'.$bulan[$l]][$i], $tmp)){
                         $tmp[$inputs['kategori'.$bulan[$l]][$i]] += (double) $inputs['belanjaDesa'.$bulan[$l]][$i];
                     }
@@ -329,6 +344,7 @@ class PotensiController extends Controller
                     }
                 }
 
+                //menyimpan data pada bulan tertentu dengan berbagai kategori
                 foreach($tmp as $key => $val){
                     $belanjaDesa = new DetailBelanjaDesa();
                     $belanjaDesa->id_kategori_belanja_desa = $key;
@@ -402,9 +418,12 @@ class PotensiController extends Controller
         DetailBelanjaDesa::where('tahun_anggaran', $inputs['tahunAnggaranLama'])->delete();
 
         $tes = array();
+        //Menyiapkan data per bulan
         for($l = 0; $l < count($bulan); $l++){
+            //Menyiapkan data per kategori belanja desa
             $tmp = array();
             for($i = 0; $i < count($inputs['kategori'.$bulan[$l]]); $i++){
+                //Jika kategori telah ada di variabel tmp maka dijumlahkan kalau belum ditambahkan
                 if(array_key_exists($inputs['kategori'.$bulan[$l]][$i], $tmp)){
                     $tmp[$inputs['kategori'.$bulan[$l]][$i]] += (double) $inputs['belanjaDesa'.$bulan[$l]][$i];
                 }
@@ -413,6 +432,7 @@ class PotensiController extends Controller
                 }
             }
 
+            //menyimpan data pada bulan tertentu dengan berbagai kategori
             foreach($tmp as $key => $val){
                 $belanjaDesa = new DetailBelanjaDesa();
                 $belanjaDesa->id_kategori_belanja_desa = $key;
@@ -455,6 +475,7 @@ class PotensiController extends Controller
         $produkUnggulan->nama = $inputs['nama'];
         $produkUnggulan->deskripsi = request('editor');
 
+        //Menyimpan foto
         if(request('fotoProduk')){
             $namefile = 'produk_unggulan_'. date("Y_m_d_H_i_s") .'.'.request('fotoProduk')->extension();
             $inputs['fotoProduk'] = 'storage/produk_unggulan/'.$namefile;
@@ -477,9 +498,11 @@ class PotensiController extends Controller
         $produkUnggulan->deskripsi = request('editor');
 
         if(request('fotoProduk')){
+            //Hapus foto lama
             $filenameLama = explode("/", $produkUnggulan->foto);
             \Storage::disk('public')->delete('produk_unggulan/'.$filenameLama[count($filenameLama)-1]);
 
+            //Simpan foto baru
             $namefile = 'produk_unggulan_'. date("Y_m_d_H_i_s") .'.'.request('fotoProduk')->extension();
             $inputs['fotoProduk'] = 'storage/produk_unggulan/'.$namefile;
             request('fotoProduk')->storeAs('produk_unggulan', $namefile, 'public');

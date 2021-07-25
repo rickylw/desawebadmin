@@ -16,6 +16,7 @@ class OrganisasiController extends Controller
         $organisasi = Organisasi::all()->first();
 
         if(request('post_struktur')){
+            //Menyimpan foto
             $namefile = 'struktur-organisasi.'.request('post_struktur')->extension();
             $inputs['post_struktur'] = 'storage/profil/'.$namefile;
             request('post_struktur')->storeAs('profil', $namefile, 'public');
@@ -36,6 +37,7 @@ class OrganisasiController extends Controller
         $organisasi = Organisasi::all()->first();
 
         if(request('post_visi_misi')){
+            //Menyimpan foto
             $namefile = 'visi-misi.'.request('post_visi_misi')->extension();
             $inputs['post_visi_misi'] = 'storage/profil/'.$namefile;
             request('post_visi_misi')->storeAs('profil', $namefile, 'public');
