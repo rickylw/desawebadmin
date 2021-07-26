@@ -32,6 +32,8 @@ class BeritaController extends Controller
             'fotoBerita' => 'required'
         ]);
 
+        $now = DB::select('select now() as date')[0]->date;
+
         $kategoriBerita = KategoriBerita::where('nama', $inputs['namaKategori'])->first();
 
         //Membuat berita
@@ -39,7 +41,7 @@ class BeritaController extends Controller
         $berita->id_kategori_berita = $kategoriBerita->id;
         $berita->judul = $inputs['judul'];
         $berita->isi = request('editor');
-        $berita->dibuat = date("Y-m-d H:i:s");
+        $berita->dibuat = $now;
         $berita->dibuat_oleh = session('name');
 
         //Batal jika tidak memiliki isi berita
@@ -80,13 +82,15 @@ class BeritaController extends Controller
             'namaKategori' => 'required'
         ]);
 
+        $now = DB::select('select now() as date')[0]->date;
+
         $berita = Berita::where('id', $id)->first();
         $kategoriBerita = KategoriBerita::where('nama', $inputs['namaKategori'])->first();
 
         $berita->id_kategori_berita = $kategoriBerita->id;
         $berita->judul = $inputs['judul'];
         $berita->isi = request('editor');
-        $berita->diupdate = date("Y-m-d H:i:s");
+        $berita->diupdate = $now;
 
         //Batal jika isi berita kosong
         if($berita->isi == null){
@@ -129,12 +133,14 @@ class BeritaController extends Controller
             'fotoGaleri' => 'required'
         ]);
 
+        $now = DB::select('select now() as date')[0]->date;
+
         $kategoriGaleri = KategoriGaleri::where('nama', $inputs['namaKategori'])->first();
 
         $galeri = new Galeri();
         $galeri->id_kategori_galeri = $kategoriGaleri->id;
         $galeri->deskripsi = request('editor');
-        $galeri->dibuat = date("Y-m-d H:i:s");
+        $galeri->dibuat = $now;
 
         //Batal jika deskripsi galeri kosong
         if($galeri->deskripsi == null){
