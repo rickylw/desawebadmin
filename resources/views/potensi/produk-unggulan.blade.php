@@ -8,6 +8,20 @@
             <a href="{{route('potensi.produk-unggulan.tambah')}}" class="btn btn-primary">Tambah Produk</a>
         </div>
 
+        @if (Session::has('potensi-store-success'))
+            <div class="alert alert-success">{{Session::get('potensi-store-success')}}</div>
+        @elseif (Session::has('potensi-store-failed'))
+            <div class="alert alert-danger">{{Session::get('potensi-store-failed')}}</div>
+        @elseif (Session::has('potensi-update-success'))
+            <div class="alert alert-success">{{Session::get('potensi-update-success')}}</div>
+        @elseif (Session::has('potensi-update-failed'))
+            <div class="alert alert-danger">{{Session::get('potensi-update-failed')}}</div>
+        @elseif (Session::has('potensi-delete-success'))
+            <div class="alert alert-success">{{Session::get('potensi-delete-success')}}</div>
+        @elseif (Session::has('potensi-delete-failed'))
+            <div class="alert alert-danger">{{Session::get('potensi-delete-failed')}}</div>
+        @endif
+
         <div>
             <div class="card shadow mb-4">
                 <div class="card-header py-3">

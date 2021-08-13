@@ -8,6 +8,20 @@
             <a class="btn btn-primary text-light" href="{{route('pengguna.masyarakat.tambah')}}">Tambah Masyarakat</a>
         </div>
 
+        @if (Session::has('pengguna-store-success'))
+            <div class="alert alert-success">{{Session::get('pengguna-store-success')}}</div>
+        @elseif (Session::has('pengguna-store-failed'))
+            <div class="alert alert-danger">{{Session::get('pengguna-store-failed')}}</div>
+        @elseif (Session::has('pengguna-delete-success'))
+            <div class="alert alert-success">{{Session::get('pengguna-delete-success')}}</div>
+        @elseif (Session::has('pengguna-delete-failed'))
+            <div class="alert alert-danger">{{Session::get('pengguna-delete-failed')}}</div>
+        @elseif (Session::has('pengguna-update-success'))
+            <div class="alert alert-success">{{Session::get('pengguna-update-success')}}</div>
+        @elseif (Session::has('pengguna-update-failed'))
+            <div class="alert alert-danger">{{Session::get('pengguna-update-failed')}}</div>
+        @endif
+
         <div>
             <div class="card shadow mb-4">
                 <div class="card-header py-3">

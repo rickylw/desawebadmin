@@ -6,7 +6,15 @@
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Produk Unggulan</h1>
         </div>
-
+        @if ($errors->any())
+            <div class="alert alert-warning alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h4><i class="icon fa fa-warning"></i> Perhatian!</h4>
+            <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li> @endforeach
+            </ul>
+        </div> @endif
         <!-- Content Row -->
         <form action="{{route('potensi.produk-unggulan.simpan')}}" method="POST" enctype="multipart/form-data">
             @csrf

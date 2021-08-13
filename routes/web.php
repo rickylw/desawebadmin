@@ -51,8 +51,8 @@ Route::middleware(['Login'])->group(function(){
     
     Route::get('/kategori/galeri', [App\Http\Controllers\KategoriController::class, 'tampilKategoriGaleri'])->name('kategori.galeri');
     Route::post('/kategori/galeri/simpan', [App\Http\Controllers\KategoriController::class, 'simpanKategoriGaleri'])->name('kategori.galeri.simpan');
-    Route::post('/kategori/galeri/detail/{kategori}', [App\Http\Controllers\KategoriController::class, 'tampilDetailKategoriBerita'])->name('kategori.galeri.detail');
-    Route::post('/kategori/galeri/ubah/{kategori}', [App\Http\Controllers\KategoriController::class, 'ubahKategoriBerita'])->name('kategori.galeri.ubah');
+    Route::post('/kategori/galeri/detail/{kategori}', [App\Http\Controllers\KategoriController::class, 'tampilDetailKategoriGaleri'])->name('kategori.galeri.detail');
+    Route::post('/kategori/galeri/ubah/{kategori}', [App\Http\Controllers\KategoriController::class, 'ubahKategoriGaleri'])->name('kategori.galeri.ubah');
     
     Route::get('/kependudukan', [App\Http\Controllers\PotensiController::class, 'tampilKependudukan'])->name('potensi.kependudukan');
     Route::post('/kependudukan/simpan', [App\Http\Controllers\PotensiController::class, 'simpanKependudukan'])->name('potensi.kependudukan.simpan');

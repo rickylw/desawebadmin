@@ -10,6 +10,26 @@
             </div>
         </div>
 
+        @if ($errors->any())
+            <div class="alert alert-warning alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h4><i class="icon fa fa-warning"></i> Perhatian!</h4>
+            <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li> @endforeach
+            </ul>
+        </div> @endif
+
+        @if (Session::has('potensi-store-success'))
+            <div class="alert alert-success">{{Session::get('potensi-store-success')}}</div>
+        @elseif (Session::has('potensi-store-failed'))
+            <div class="alert alert-danger">{{Session::get('potensi-store-failed')}}</div>
+        @elseif (Session::has('potensi-update-success'))
+            <div class="alert alert-success">{{Session::get('potensi-update-success')}}</div>
+        @elseif (Session::has('potensi-update-failed'))
+            <div class="alert alert-danger">{{Session::get('potensi-update-failed')}}</div>
+        @endif
+
         <!-- Content Row -->
         <form action="{{route('potensi.anggaran.simpan')}}" method="POST" enctype="multipart/form-data">
             @csrf

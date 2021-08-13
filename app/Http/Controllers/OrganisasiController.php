@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Organisasi;
+use Illuminate\Support\Facades\Session;
 
 class OrganisasiController extends Controller
 {
@@ -23,8 +24,13 @@ class OrganisasiController extends Controller
             $organisasi->gambar_struktur = $inputs['post_struktur'];
         }
 
-        $organisasi->struktur = request('editor');
-        $organisasi->save();
+        $organisasi->struktur = request('editor');        
+        if($organisasi->save()){
+            Session::flash('organisasi-store-success', 'Data berhasil disimpan');
+        }
+        else{
+            Session::flash('organisasi-store-failed', 'Data gagal disimpan');
+        }
         return redirect()->route('organisasi.struktur-organisasi');
     }
 
@@ -45,7 +51,12 @@ class OrganisasiController extends Controller
         }
 
         $organisasi->visi_misi = request('editor');
-        $organisasi->save();
+        if($organisasi->save()){
+            Session::flash('organisasi-store-success', 'Data berhasil disimpan');
+        }
+        else{
+            Session::flash('organisasi-store-failed', 'Data gagal disimpan');
+        }
         return redirect()->route('organisasi.visi-misi');
     }
 }

@@ -7,6 +7,12 @@
             <h1 class="h3 mb-0 text-gray-800">Website</h1>
         </div>
 
+        @if (Session::has('profil-store-success'))
+            <div class="alert alert-success">{{Session::get('profil-store-success')}}</div>
+        @elseif (Session::has('profil-store-failed'))
+            <div class="alert alert-danger">{{Session::get('profil-store-failed')}}</div>
+        @endif
+
         <!-- Content Row -->
         <form action="{{route('profil.website.simpan')}}" method="POST" enctype="multipart/form-data">
             @csrf

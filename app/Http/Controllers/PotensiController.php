@@ -12,6 +12,7 @@ use App\Models\DetailAnggaran;
 use App\Models\DetailBelanjaDesa;
 use App\Models\ProdukUnggulan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class PotensiController extends Controller
 {
@@ -57,7 +58,12 @@ class PotensiController extends Controller
         $kependudukan->laki_atas = $inputs['laki_atas'];
         $kependudukan->perempuan_atas = $inputs['perempuan_atas'];
         $kependudukan->usia_produktif = $inputs['usia_produktif'];
-        $kependudukan->save();
+        if($kependudukan->save()){
+            Session::flash('potensi-store-success', 'Data berhasil disimpan');
+        }
+        else{
+            Session::flash('potensi-store-failed', 'Data gagal disimpan');
+        }
         return redirect()->route('potensi.kependudukan');
     }
 
@@ -96,7 +102,12 @@ class PotensiController extends Controller
         $pendidikan->perempuan_tamat_pt = $inputs['perempuan_tamat_pt'];
         $pendidikan->laki_tidak_diketahui = $inputs['laki_tidak_diketahui'];
         $pendidikan->perempuan_tidak_diketahui = $inputs['perempuan_tidak_diketahui'];
-        $pendidikan->save();
+        if($pendidikan->save()){
+            Session::flash('potensi-store-success', 'Data berhasil disimpan');
+        }
+        else{
+            Session::flash('potensi-store-failed', 'Data gagal disimpan');
+        }
         return redirect()->route('potensi.pendidikan');
     }
 
@@ -171,6 +182,7 @@ class PotensiController extends Controller
 
         //Batal jika ada data anggaran lama dengan tahun yg diinputkan sama
         if(count($anggaranLama) > 0){
+            Session::flash('potensi-store-failed', 'Data gagal disimpan');
             return redirect()->route('potensi.anggaran');
         }
         else{
@@ -205,6 +217,7 @@ class PotensiController extends Controller
                     $anggaran->save();
                 }
             }
+            Session::flash('potensi-store-success', 'Data berhasil disimpan');
             return redirect()->route('potensi.anggaran');
         }
     }
@@ -238,11 +251,13 @@ class PotensiController extends Controller
             'anggaranPendapatanDesember' => 'required',
             'kategoriDesember' => 'required',
             'anggaranPendapatan' => 'required',
-            'realisasiPendapatan' => 'required',
-            'realisasiBelanja' => 'required',
-            'tahunAnggaran' => 'required',
             'tahunAnggaranLama' => 'required'
         ]);
+
+        if(request('realisasiPendapatan') == null || request('realisasiBelanja') == null || request('tahunAnggaran') == null){
+            Session::flash('potensi-update-failed', 'Data gagal diupdate');
+            return redirect()->route('potensi.anggaran'); 
+        }
 
         //Hapus anggaran Lama
         Anggaran::where('tahun_anggaran', $inputs['tahunAnggaranLama'])->delete();
@@ -281,6 +296,7 @@ class PotensiController extends Controller
                 $anggaran->save();
             }
         }
+        Session::flash('potensi-store-success', 'Data berhasil disimpan');
         return redirect()->route('potensi.anggaran.daftar-anggaran');
         
     }
@@ -326,6 +342,7 @@ class PotensiController extends Controller
 
         //Batal jika ada data anggaran lama dengan tahun yg diinputkan sama
         if(count($detailBelanjaDesaLama) > 0){
+            Session::flash('potensi-store-failed', 'Data gagal disimpan');
             return redirect()->route('potensi.belanja-desa');
         }
         else{
@@ -354,6 +371,7 @@ class PotensiController extends Controller
                     $belanjaDesa->save();
                 }
             }
+            Session::flash('potensi-store-success', 'Data berhasil disimpan');
             return redirect()->route('potensi.belanja-desa');
         }
     }
@@ -410,9 +428,13 @@ class PotensiController extends Controller
             'kategoriNovember' => 'required',
             'belanjaDesaDesember' => 'required',
             'kategoriDesember' => 'required',
-            'tahunAnggaran' => 'required',
             'tahunAnggaranLama' => 'required'
         ]);
+
+        if(request('tahunAnggaran') == null){
+            Session::flash('potensi-update-failed', 'Data gagal diupdate');
+            return redirect()->route('potensi.belanja-desa'); 
+        }
 
         //Hapus Data Lama
         DetailBelanjaDesa::where('tahun_anggaran', $inputs['tahunAnggaranLama'])->delete();
@@ -457,6 +479,7 @@ class PotensiController extends Controller
 
     public function hapusProdukUnggulan($id){
         ProdukUnggulan::where('id', $id)->delete();
+        Session::flash('potensi-delete-success', 'Data berhasil dihapus');
         return redirect()->route('potensi.produk-unggulan');
     }
 
@@ -469,6 +492,7 @@ class PotensiController extends Controller
         $inputs = request()->validate([
             'nama' => 'required',
             'fotoProduk' => 'required',
+            'editor' => 'required'
         ]);
 
         $produkUnggulan = new ProdukUnggulan();
@@ -484,17 +508,19 @@ class PotensiController extends Controller
         }
 
         $produkUnggulan->save();
+        Session::flash('potensi-store-success', 'Data berhasil disimpan');
         return redirect()->route('potensi.produk-unggulan');
     }
 
     public function updateProdukUnggulan($id){
-        $inputs = request()->validate([
-            'nama' => 'required'
-        ]);
+
+        if(request('nama') == null || request('editor') == null){
+            Session::flash('potensi-update-failed', 'Data gagal diupdate');
+        }
 
         $produkUnggulan = ProdukUnggulan::where('id', $id)->first();
 
-        $produkUnggulan->nama = $inputs['nama'];
+        $produkUnggulan->nama = request('nama');
         $produkUnggulan->deskripsi = request('editor');
 
         if(request('fotoProduk')){
@@ -510,6 +536,7 @@ class PotensiController extends Controller
         }        
 
         $produkUnggulan->save();
+        Session::flash('potensi-store-success', 'Data berhasil diupdate');
         return redirect()->route('potensi.produk-unggulan');
     }
 }

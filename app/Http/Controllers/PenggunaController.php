@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Masyarakat;
 use App\Models\Admin;
+use Illuminate\Support\Facades\Session;
 
 class PenggunaController extends Controller
 {
@@ -39,6 +40,7 @@ class PenggunaController extends Controller
         $masyarakat->email = $inputs['email'];
         
         $masyarakat->save();
+        Session::flash('pengguna-store-success', 'Data berhasil disimpan');
         return redirect()->route('pengguna.masyarakat');
     }
 
@@ -69,11 +71,13 @@ class PenggunaController extends Controller
         $masyarakat->email = $inputs['email'];
         
         $masyarakat->save();
+        Session::flash('pengguna-update-success', 'Data berhasil diupdate');
         return redirect()->route('pengguna.masyarakat');
     }
 
     public function hapusMasyarakat($id){
         Masyarakat::where('id', $id)->delete();
+        Session::flash('pengguna-delete-success', 'Data berhasil dihapus');
         return redirect()->route('pengguna.masyarakat');
     }
     public function tampilAdmin(){
@@ -107,6 +111,7 @@ class PenggunaController extends Controller
         $admin->email = $inputs['email'];
         
         $admin->save();
+        Session::flash('pengguna-store-success', 'Data berhasil disimpan');
         return redirect()->route('pengguna.admin');
     }
 
@@ -137,11 +142,13 @@ class PenggunaController extends Controller
         $admin->email = $inputs['email'];
         
         $admin->save();
+        Session::flash('pengguna-update-success', 'Data berhasil diupdate');
         return redirect()->route('pengguna.admin');
     }
 
     public function hapusAdmin($id){
         Admin::where('id', $id)->delete();
+        Session::flash('pengguna-delete-success', 'Data berhasil dihapus');
         return redirect()->route('pengguna.admin');
     }
 }

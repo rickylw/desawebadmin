@@ -7,6 +7,12 @@
             <h1 class="h3 mb-0 text-gray-800">Struktur Organisasi</h1>
         </div>
 
+        @if (Session::has('organisasi-store-success'))
+            <div class="alert alert-success">{{Session::get('organisasi-store-success')}}</div>
+        @elseif (Session::has('organisasi-store-failed'))
+            <div class="alert alert-danger">{{Session::get('organisasi-store-failed')}}</div>
+        @endif
+
         <!-- Content Row -->
         <form action="{{route('organisasi.struktur-organisasi.simpan')}}" method="POST" enctype="multipart/form-data">
             @csrf

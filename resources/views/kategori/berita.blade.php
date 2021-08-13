@@ -2,6 +2,26 @@
     @section('content')
         <div class="container-fluid">
 
+            @if ($errors->any())
+            <div class="alert alert-warning alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h4><i class="icon fa fa-warning"></i> Perhatian!</h4>
+            <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li> @endforeach
+            </ul>
+            </div> @endif
+
+            @if (Session::has('kategori-store-success'))
+                <div class="alert alert-success">{{Session::get('kategori-store-success')}}</div>
+            @elseif (Session::has('kategori-store-failed'))
+                <div class="alert alert-danger">{{Session::get('kategori-store-failed')}}</div>
+            @elseif (Session::has('kategori-update-success'))
+                <div class="alert alert-success">{{Session::get('kategori-update-success')}}</div>
+            @elseif (Session::has('kategori-update-failed'))
+                <div class="alert alert-danger">{{Session::get('kategori-update-failed')}}</div>
+            @endif
+
             <div class="row">
                 <div class="col-sm-3">
                     <form action="{{route('kategori.berita.simpan')}}" method="POST">

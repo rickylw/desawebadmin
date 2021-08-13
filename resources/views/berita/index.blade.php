@@ -8,6 +8,16 @@
             <a href="{{route('berita.tambah')}}" class="btn btn-primary">Tambah Berita</a>
         </div>
 
+        @if (Session::has('berita-store-success'))
+            <div class="alert alert-success">{{Session::get('berita-store-success')}}</div>
+        @elseif (Session::has('berita-store-failed'))
+            <div class="alert alert-danger">{{Session::get('berita-store-failed')}}</div>
+        @elseif (Session::has('berita-update-success'))
+            <div class="alert alert-success">{{Session::get('berita-update-success')}}</div>
+        @elseif (Session::has('berita-update-failed'))
+            <div class="alert alert-danger">{{Session::get('berita-update-failed')}}</div>
+        @endif
+
         <div>
             <div class="card shadow mb-4">
                 <div class="card-header py-3">

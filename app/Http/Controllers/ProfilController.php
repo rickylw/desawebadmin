@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Profil;
 use App\Models\Website;
+use Illuminate\Support\Facades\Session;
 
 class ProfilController extends Controller
 {
@@ -25,7 +26,12 @@ class ProfilController extends Controller
         }
 
         $profil->sejarah = request('editor');
-        $profil->save();
+        if($profil->save()){
+            Session::flash('profil-store-success', 'Data berhasil disimpan');
+        }
+        else{
+            Session::flash('profil-store-failed', 'Data gagal disimpan');
+        }
         return redirect()->route('profil.sejarah');
     }
 
@@ -46,7 +52,12 @@ class ProfilController extends Controller
         }
 
         $profil->geografis = request('editor');
-        $profil->save();
+        if($profil->save()){
+            Session::flash('profil-store-success', 'Data berhasil disimpan');
+        }
+        else{
+            Session::flash('profil-store-failed', 'Data gagal disimpan');
+        }
         return redirect()->route('profil.wilayah-geografis');
     }
 
@@ -94,7 +105,12 @@ class ProfilController extends Controller
             $website->logo_kecil = $inputs['logo_kecil'];
         }
 
-        $website->save();
+        if($website->save()){
+            Session::flash('profil-store-success', 'Data berhasil disimpan');
+        }
+        else{
+            Session::flash('profil-store-failed', 'Data gagal disimpan');
+        }
         return redirect()->route('profil.website');
     }
 }

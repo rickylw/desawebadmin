@@ -8,6 +8,7 @@ use App\Models\KategoriGaleri;
 use App\Models\Galeri;
 use App\Models\Berita;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class BeritaController extends Controller
 {
@@ -29,7 +30,8 @@ class BeritaController extends Controller
         $inputs = request()->validate([
             'judul' => 'required',
             'namaKategori' => 'required',
-            'fotoBerita' => 'required'
+            'fotoBerita' => 'required',
+            'editor' => 'required'
         ]);
 
         $now = DB::select('select now() as date')[0]->date;
@@ -44,11 +46,6 @@ class BeritaController extends Controller
         $berita->dibuat = $now;
         $berita->dibuat_oleh = session('name');
 
-        //Batal jika tidak memiliki isi berita
-        if($berita->isi == null){
-            return redirect()->route('berita.tambah');
-        }
-
         //Menyimpan foto berita
         if(request('fotoBerita')){
             $namefile = 'berita_'. date("Y_m_d_H_i_s") .'.'.request('fotoBerita')->extension();
@@ -56,8 +53,12 @@ class BeritaController extends Controller
             request('fotoBerita')->storeAs('berita', $namefile, 'public');
             $berita->foto = $inputs['fotoBerita'];
         }
-
-        $berita->save();
+        if($berita->save()){
+            Session::flash('berita-store-success', 'Data berhasil disimpan');
+        }
+        else{
+            Session::flash('berita-store-failed', 'Data gagal disimpan');
+        }
         return redirect()->route('berita.index');
     }
 
@@ -77,10 +78,10 @@ class BeritaController extends Controller
     }
 
     public function updateBerita($id){
-        $inputs = request()->validate([
-            'judul' => 'required',
-            'namaKategori' => 'required'
-        ]);
+        if(request('judul') || request('namaKategori') || request('editor')){
+            Session::flash('berita-update-failed', 'Data gagal diupdate');
+            return redirect()->route('berita.index');
+        }
 
         $now = DB::select('select now() as date')[0]->date;
 
@@ -91,11 +92,6 @@ class BeritaController extends Controller
         $berita->judul = $inputs['judul'];
         $berita->isi = request('editor');
         $berita->diupdate = $now;
-
-        //Batal jika isi berita kosong
-        if($berita->isi == null){
-            return redirect()->route('berita.detail-berita', $berita->id);
-        }
 
         if(request('fotoBerita')){
             //Hapus foto lama
@@ -109,7 +105,12 @@ class BeritaController extends Controller
             $berita->foto = $inputs['fotoBerita'];
         }
 
-        $berita->save();
+        if($berita->save()){
+            Session::flash('berita-update-success', 'Data berhasil diupdate');
+        }
+        else{
+            Session::flash('berita-update-failed', 'Data gagal diupdate');
+        }
         return redirect()->route('berita.index');
     }
 
@@ -130,7 +131,8 @@ class BeritaController extends Controller
     public function simpanGaleri(){
         $inputs = request()->validate([
             'namaKategori' => 'required',
-            'fotoGaleri' => 'required'
+            'fotoGaleri' => 'required',
+            'editor' => 'required'
         ]);
 
         $now = DB::select('select now() as date')[0]->date;
@@ -142,11 +144,6 @@ class BeritaController extends Controller
         $galeri->deskripsi = request('editor');
         $galeri->dibuat = $now;
 
-        //Batal jika deskripsi galeri kosong
-        if($galeri->deskripsi == null){
-            return redirect()->route('galeri.tambah');
-        }
-
         //Menyimpan foto galeri
         if(request('fotoGaleri')){
             $namefile = 'galeri_'. date("Y_m_d_H_i_s") .'.'.request('fotoGaleri')->extension();
@@ -155,7 +152,12 @@ class BeritaController extends Controller
             $galeri->foto = $inputs['fotoGaleri'];
         }
 
-        $galeri->save();
+        if($galeri->save()){
+            Session::flash('galeri-store-success', 'Data berhasil disimpan');
+        }
+        else{
+            Session::flash('galeri-store-failed', 'Data gagal disimpan');
+        }
         return redirect()->route('galeri.index');
     }
 
@@ -175,20 +177,16 @@ class BeritaController extends Controller
     }
 
     public function updateGaleri($id){
-        $inputs = request()->validate([
-            'namaKategori' => 'required'
-        ]);
+        if(request('namaKategori') || request('editor')){
+            Session::flash('berita-update-failed', 'Data gagal diupdate');
+            return redirect()->route('berita.index');
+        }
 
         $galeri = Galeri::where('id', $id)->first();
         $kategoriGaleri = KategoriGaleri::where('nama', $inputs['namaKategori'])->first();
 
         $galeri->id_kategori_galeri = $kategoriGaleri->id;
         $galeri->deskripsi = request('editor');
-
-        //Batal jika deskripsi galeri kosong
-        if($galeri->deskripsi == null){
-            return redirect()->route('galeri.detail-galeri', $galeri->id);
-        }
 
         if(request('fotoGaleri')){
             //Hapus foto lama
@@ -202,6 +200,7 @@ class BeritaController extends Controller
             $galeri->foto = $inputs['fotoGaleri'];
         }
 
+        Session::flash('galeri-update-success', 'Data berhasil diupdate');
         $galeri->save();
         return redirect()->route('galeri.index');
     }

@@ -8,6 +8,16 @@
             <a href="{{route('galeri.tambah')}}" class="btn btn-primary">Tambah Galeri</a>
         </div>
 
+        @if (Session::has('galeri-store-success'))
+            <div class="alert alert-success">{{Session::get('galeri-store-success')}}</div>
+        @elseif (Session::has('galeri-store-failed'))
+            <div class="alert alert-danger">{{Session::get('galeri-store-failed')}}</div>>
+        @elseif (Session::has('galeri-update-success'))
+            <div class="alert alert-success">{{Session::get('galeri-update-success')}}</div>
+        @elseif (Session::has('galeri-update-failed'))
+            <div class="alert alert-danger">{{Session::get('galeri-update-failed')}}</div>>
+        @endif
+
         <div>
             <div class="card shadow mb-4">
                 <div class="card-header py-3">

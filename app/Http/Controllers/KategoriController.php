@@ -7,6 +7,7 @@ use App\Models\KategoriAnggaran;
 use App\Models\KategoriBelanjaDesa;
 use App\Models\KategoriBerita;
 use App\Models\KategoriGaleri;
+use Illuminate\Support\Facades\Session;
 
 class KategoriController extends Controller
 {
@@ -22,12 +23,18 @@ class KategoriController extends Controller
 
         //Batal jika kategori sudah ada
         if(KategoriAnggaran::where('nama', $inputs['name'])->first()){
+            Session::flash('kategori-store-failed', 'Data gagal disimpan');
             return redirect()->route('kategori.anggaran');
         }
 
         $kategoriAnggaran = new KategoriAnggaran();
         $kategoriAnggaran->nama = $inputs['name'];
-        $kategoriAnggaran->save();
+        if($kategoriAnggaran->save()){
+            Session::flash('kategori-store-success', 'Data berhasil disimpan');
+        }
+        else{
+            Session::flash('kategori-store-failed', 'Data gagal disimpan');
+        }
         return redirect()->route('kategori.anggaran');
     }
 
@@ -39,17 +46,24 @@ class KategoriController extends Controller
     public function ubahKategoriAnggaran($id){
         $kategoriAnggaran = KategoriAnggaran::where('id', $id)->first();
 
-        $inputs = request()->validate([
-            'name' => 'required'
-        ]);
+        if(request('name') == null){
+            Session::flash('kategori-update-failed', 'Data gagal diupdate');
+            return redirect()->route('kategori.anggaran'); 
+        }
 
         //Batal jika kategori sudah ada
-        if(KategoriAnggaran::where('nama', $inputs['name'])->first()){
+        if(KategoriAnggaran::where('nama', request('name'))->first()){
+            Session::flash('kategori-update-failed', 'Data gagal diupdate');
             return redirect()->route('kategori.anggaran');
         }
 
-        $kategoriAnggaran->nama = $inputs['name'];
-        $kategoriAnggaran->save();
+        $kategoriAnggaran->nama = request('name');
+        if($kategoriAnggaran->save()){
+            Session::flash('kategori-update-success', 'Data berhasil diupdate');
+        }
+        else{
+            Session::flash('kategori-update-failed', 'Data gagal diupdate');
+        }
         return redirect()->route('kategori.anggaran');        
     }
     
@@ -65,12 +79,19 @@ class KategoriController extends Controller
 
         //Batal jika kategori sudah ada
         if(KategoriBelanjaDesa::where('nama', $inputs['name'])->first()){
+            Session::flash('kategori-store-failed', 'Data gagal disimpan');
             return redirect()->route('kategori.belanja-desa');
         }
 
         $kategoriBelanjaDesa = new KategoriBelanjaDesa();
         $kategoriBelanjaDesa->nama = $inputs['name'];
         $kategoriBelanjaDesa->save();
+        if($kategoriBelanjaDesa->save()){
+            Session::flash('kategori-store-success', 'Data berhasil disimpan');
+        }
+        else{
+            Session::flash('kategori-store-failed', 'Data gagal disimpan');
+        }
         return redirect()->route('kategori.belanja-desa');
     }
 
@@ -82,17 +103,24 @@ class KategoriController extends Controller
     public function ubahKategoriBelanjaDesa($id){
         $kategoriBelanjaDesa = KategoriBelanjaDesa::where('id', $id)->first();
 
-        $inputs = request()->validate([
-            'name' => 'required'
-        ]);
+        if(request('name') == null){
+            Session::flash('kategori-update-failed', 'Data gagal diupdate');
+            return redirect()->route('kategori.belanja-desa'); 
+        }
 
         //Batal jika kategori sudah ada
-        if(KategoriBelanjaDesa::where('nama', $inputs['name'])->first()){
+        if(KategoriBelanjaDesa::where('nama', request('name'))->first()){
+            Session::flash('kategori-update-failed', 'Data gagal diupdate');
             return redirect()->route('kategori.belanja-desa');
         }
 
-        $kategoriBelanjaDesa->nama = $inputs['name'];
-        $kategoriBelanjaDesa->save();
+        $kategoriBelanjaDesa->nama = request('name');
+        if($kategoriBelanjaDesa->save()){
+            Session::flash('kategori-update-success', 'Data berhasil diupdate');
+        }
+        else{
+            Session::flash('kategori-update-failed', 'Data gagal diupdate');
+        }
         return redirect()->route('kategori.belanja-desa');        
     }
     
@@ -108,12 +136,19 @@ class KategoriController extends Controller
 
         //Batal jika kategori sudah ada
         if(KategoriBerita::where('nama', $inputs['name'])->first()){
+            Session::flash('kategori-store-success', 'Data berhasil disimpan');
             return redirect()->route('kategori.berita');
         }
 
         $kategoriBerita = new KategoriBerita();
         $kategoriBerita->nama = $inputs['name'];
-        $kategoriBerita->save();
+        if($kategoriBerita->save()){
+            Session::flash('kategori-store-success', 'Data berhasil disimpan');
+        }
+        else{
+            Session::flash('kategori-store-failed', 'Data gagal disimpan');
+        }
+        
         return redirect()->route('kategori.berita');
     }
 
@@ -125,17 +160,24 @@ class KategoriController extends Controller
     public function ubahKategoriBerita($id){
         $kategoriBerita = KategoriBerita::where('id', $id)->first();
 
-        $inputs = request()->validate([
-            'name' => 'required'
-        ]);
+        if(request('name') == null){
+            Session::flash('kategori-update-failed', 'Data gagal diupdate');
+            return redirect()->route('kategori.berita'); 
+        }
 
         //Batal jika kategori sudah ada
-        if(KategoriBerita::where('nama', $inputs['name'])->first()){
+        if(KategoriBerita::where('nama', request('name'))->first()){
+            Session::flash('kategori-update-failed', 'Data gagal diupdate');
             return redirect()->route('kategori.berita');
         }
 
-        $kategoriBerita->nama = $inputs['name'];
-        $kategoriBerita->save();
+        $kategoriBerita->nama = request('name');
+        if($kategoriBerita->save()){
+            Session::flash('kategori-update-success', 'Data berhasil diupdate');
+        }
+        else{
+            Session::flash('kategori-update-failed', 'Data gagal diupdate');
+        }
         return redirect()->route('kategori.berita');        
     }
     
@@ -151,34 +193,47 @@ class KategoriController extends Controller
 
         //Batal jika kategori sudah ada
         if(KategoriGaleri::where('nama', $inputs['name'])->first()){
+            Session::flash('kategori-store-failed', 'Data gagal disimpan');
             return redirect()->route('kategori.galeri');
         }
 
         $kategoriGaleri = new KategoriGaleri();
         $kategoriGaleri->nama = $inputs['name'];
-        $kategoriGaleri->save();
+        if($kategoriGaleri->save()){
+            Session::flash('kategori-store-success', 'Data berhasil disimpan');
+        }
+        else{
+            Session::flash('kategori-store-failed', 'Data gagal disimpan');
+        }
         return redirect()->route('kategori.galeri');
     }
 
     public function tampilDetailKategoriGaleri($id){
         $kategoriGaleri = KategoriGaleri::where('id', $id)->first();
-        return view('kategori.galeri', ["kategoriGaleri" => $kategoriGaleri]);
+        return view('kategori.detail-galeri', ["kategoriGaleri" => $kategoriGaleri]);
     }
 
     public function ubahKategoriGaleri($id){
         $kategoriGaleri = KategoriGaleri::where('id', $id)->first();
 
-        $inputs = request()->validate([
-            'name' => 'required'
-        ]);
+        if(request('name') == null){
+            Session::flash('kategori-update-failed', 'Data gagal diupdate');
+            return redirect()->route('kategori.galeri'); 
+        }
 
         //Batal jika kategori sudah ada
-        if(KategoriGaleri::where('nama', $inputs['name'])->first()){
+        if(KategoriGaleri::where('nama', request('name'))->first()){
+            Session::flash('kategori-update-failed', 'Data gagal diupdate');
             return redirect()->route('kategori.galeri');
         }
 
-        $kategoriGaleri->nama = $inputs['name'];
-        $kategoriGaleri->save();
+        $kategoriGaleri->nama = request('name');
+        if($kategoriGaleri->save()){
+            Session::flash('kategori-update-success', 'Data berhasil diupdate');
+        }
+        else{
+            Session::flash('kategori-update-failed', 'Data gagal diupdate');
+        }
         return redirect()->route('kategori.galeri');        
     }
 }
