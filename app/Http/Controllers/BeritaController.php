@@ -8,6 +8,7 @@ use App\Models\KategoriGaleri;
 use App\Models\Galeri;
 use App\Models\Berita;
 use Illuminate\Support\Facades\DB;
+use Response;
 use Illuminate\Support\Facades\Session;
 
 class BeritaController extends Controller
@@ -77,8 +78,8 @@ class BeritaController extends Controller
         return view('berita.detail-berita', ['berita' => $berita, 'kategoriBerita' => $kategoriBerita]);
     }
 
-    public function updateBerita($id){
-        if(request('judul') || request('namaKategori') || request('editor')){
+    public function updateBerita(Request $request, $id){
+        if(!$request->has('judul') || !$request->has('namaKategori') || !$request->has('editor')){
             Session::flash('berita-update-failed', 'Data gagal diupdate');
             return redirect()->route('berita.index');
         }
@@ -86,10 +87,10 @@ class BeritaController extends Controller
         $now = DB::select('select now() as date')[0]->date;
 
         $berita = Berita::where('id', $id)->first();
-        $kategoriBerita = KategoriBerita::where('nama', $inputs['namaKategori'])->first();
+        $kategoriBerita = KategoriBerita::where('nama', $request['namaKategori'])->first();
 
         $berita->id_kategori_berita = $kategoriBerita->id;
-        $berita->judul = $inputs['judul'];
+        $berita->judul = $request['judul'];
         $berita->isi = request('editor');
         $berita->diupdate = $now;
 
@@ -204,6 +205,23 @@ class BeritaController extends Controller
         $galeri->save();
         return redirect()->route('galeri.index');
     }
+
+    public function hapusGaleri($id){
+        $galeri = Galeri::where('id', $id)->first();
+        if($galeri->foto != null){
+            //Hapus foto lama
+            $filenameLama = explode("/", $galeri->foto);
+            \Storage::disk('public')->delete('galeri/'.$filenameLama[count($filenameLama)-1]);
+        }
+
+        Galeri::where('id', $id)->delete();
+        Session::flash('galeri-update-success', 'Data berhasil dihapus');
+        return redirect()->route('galeri.index');
+    }
     
-    
+    public function updateAktifBerita($id){
+        $berita = Berita::where('id', $id)->first();
+        $berita->is_actived = !$berita->is_actived;
+		    return Response::json($berita->save());
+    }
 }

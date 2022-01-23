@@ -17,10 +17,11 @@
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                       <thead>
                         <tr>
+                            <th style="width: 5%">#</th>
                             <th style="width: 5%">No</th>
-                            <th style="width: 15%">Judul</th>
-                            <th style="width: 30%">Foto</th>
-                            <th style="width: 30%">Deskripsi</th>
+                            <th style="width: 20%">Judul</th>
+                            <th style="width: 25%">Foto</th>
+                            <th style="width: 25%">Deskripsi</th>
                             <th style="width: 15%">Dibuat</th>
                             <th style="width: 5%">Aksi</th>
                         </tr>
@@ -29,6 +30,11 @@
                         <?php $k = 1 ?>
                           @foreach($berita as $v)
                             <tr>
+                              <td>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" data-id="{{$v->id}}" id="checkActive" {{($v->is_actived == '1') ? 'checked' : ''}}>
+                                </div>
+                              </td>
                               <td>{{($berita->currentPage()-1) * $berita->perpage() + $k++}}</td>
                               <td>{{$v->judul}}</td>
                               <td>
@@ -76,5 +82,15 @@
 
     @section('contentjs')
         <script type="text/javascript" src="{{asset('js/anggaran.js')}}"></script>
+        <script type="text/javascript">
+          $(document).on("click", "#checkActive", function(){
+              var beritaId = $(this).attr('data-id');
+              $.get('update-aktif/' + beritaId, function(data){
+                  if(data == 1){
+                      location.reload();
+                  }
+              })
+          })
+        </script>
     @endsection
 </x-dashboard>

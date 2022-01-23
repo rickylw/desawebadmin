@@ -251,6 +251,9 @@ class PotensiController extends Controller
             'anggaranPendapatanDesember' => 'required',
             'kategoriDesember' => 'required',
             'anggaranPendapatan' => 'required',
+            'realisasiPendapatan' => 'required',
+            'realisasiBelanja' => 'required',
+            'tahunAnggaran' => 'required',
             'tahunAnggaranLama' => 'required'
         ]);
 
@@ -260,8 +263,6 @@ class PotensiController extends Controller
         }
 
         //Hapus anggaran Lama
-        Anggaran::where('tahun_anggaran', $inputs['tahunAnggaranLama'])->delete();
-        DetailAnggaran::where('tahun_anggaran', $inputs['tahunAnggaranLama'])->delete();
 
         //Menyimpan anggaran baru
         $anggaran = new Anggaran();
@@ -269,7 +270,9 @@ class PotensiController extends Controller
         $anggaran->realisasi_pendapatan = $inputs['realisasiPendapatan'];
         $anggaran->realisasi_belanja = $inputs['realisasiBelanja'];
         $anggaran->tahun_anggaran = $inputs['tahunAnggaran'];
-        $anggaran->save();
+        if($anggaran->save()){
+            Anggaran::where('tahun_anggaran', $inputs['tahunAnggaranLama'])->delete();
+        }
 
         $tes = array();
         //Menyiapkan data per bulan
@@ -296,6 +299,7 @@ class PotensiController extends Controller
                 $anggaran->save();
             }
         }
+        DetailAnggaran::where('tahun_anggaran', $inputs['tahunAnggaranLama'])->delete();
         Session::flash('potensi-store-success', 'Data berhasil disimpan');
         return redirect()->route('potensi.anggaran.daftar-anggaran');
         
@@ -428,6 +432,7 @@ class PotensiController extends Controller
             'kategoriNovember' => 'required',
             'belanjaDesaDesember' => 'required',
             'kategoriDesember' => 'required',
+            'tahunAnggaran' => 'required',
             'tahunAnggaranLama' => 'required'
         ]);
 

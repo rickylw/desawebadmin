@@ -45,7 +45,12 @@
                                     @csrf
                                     @method("GET")
                                     <button class="btn btn-primary" type="submit">Detail</button>
-                                </form>   
+                                </form>  
+                                <form action="{{route('galeri.hapus', $v->id)}}" method="POST">
+                                    @csrf
+                                    @method("POST")
+                                    <button class="btn btn-danger" type="submit">Hapus</button>
+                                </form> 
                               </td>
                             </tr>
                           @endforeach

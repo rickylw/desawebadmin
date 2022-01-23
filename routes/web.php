@@ -86,6 +86,7 @@ Route::middleware(['Login'])->group(function(){
     Route::get('/berita/daftar-berita/{id}', [App\Http\Controllers\BeritaController::class, 'tampilDaftarBerita'])->name('berita.daftar-berita');
     Route::get('/berita/detail-berita/{id}', [App\Http\Controllers\BeritaController::class, 'tampilDetailBerita'])->name('berita.detail-berita');
     Route::post('/berita/update/{id}', [App\Http\Controllers\BeritaController::class, 'updateBerita'])->name('berita.update');
+    Route::get('/berita/daftar-berita/update-aktif/{id}', [App\Http\Controllers\BeritaController::class, 'updateAktifBerita'])->name('berita.active');
     
     Route::get('/galeri', [App\Http\Controllers\BeritaController::class, 'tampilGaleri'])->name('galeri.index');
     Route::get('/galeri/tambah', [App\Http\Controllers\BeritaController::class, 'tampilTambahGaleri'])->name('galeri.tambah');
@@ -93,6 +94,7 @@ Route::middleware(['Login'])->group(function(){
     Route::get('/galeri/daftar-galeri/{id}', [App\Http\Controllers\BeritaController::class, 'tampilDaftarGaleri'])->name('galeri.daftar-galeri');
     Route::get('/galeri/detail-galeri/{id}', [App\Http\Controllers\BeritaController::class, 'tampilDetailGaleri'])->name('galeri.detail-galeri');
     Route::post('/galeri/update/{id}', [App\Http\Controllers\BeritaController::class, 'updateGaleri'])->name('galeri.update');
+    Route::post('/galeri/hapus/{id}', [App\Http\Controllers\BeritaController::class, 'hapusGaleri'])->name('galeri.hapus');
     
     Route::get('/masyarakat', [App\Http\Controllers\PenggunaController::class, 'tampilMasyarakat'])->name('pengguna.masyarakat');
     Route::get('/masyarakat/tambah', [App\Http\Controllers\PenggunaController::class, 'tampilTambahMasyarakat'])->name('pengguna.masyarakat.tambah');
